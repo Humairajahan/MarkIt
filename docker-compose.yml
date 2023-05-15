@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  fastapi:
+    build: .
+    ports:
+      - "3000:3000"
+    command: "uvicorn backend_server.main:app --host 0.0.0.0 --port 3000"
