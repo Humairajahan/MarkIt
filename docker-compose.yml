@@ -1,7 +1,14 @@
 version: "3.8"
 services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6380:6379"
+
   fastapi:
     build: .
     ports:
       - "3000:3000"
+    depends_on:
+      - redis
     command: "uvicorn backend_server.main:app --host 0.0.0.0 --port 3000"
