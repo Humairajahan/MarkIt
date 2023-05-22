@@ -19,14 +19,14 @@ class RedisClient:
 
     def __init__(self):
         self.redis_client = redis.Redis(host=self.host, port=self.port, db=self.db)
-        self.redis_keys = self.redis_client.keys()
 
     def pushToRedis(self, data):
         self.redis_client.set(self.redis_key, json.dumps(data))
 
     def loadCache(self):
+        redis_keys = self.redis_client.keys()
         key_in_bytes = str.encode(self.redis_key)
-        if key_in_bytes in self.redis_keys:
+        if key_in_bytes in redis_keys:
             users = json.loads(self.redis_client.get(self.redis_key))
         else:
             users = {"user": {"date": "", "checkIN": "", "checkOUT": ""}}
@@ -57,7 +57,7 @@ class RedisClient:
         else:
             logger.info("User exists")
             date = users[user]["date"]
-            if date == datetime.now().date():
+            if date == str(datetime.now().date()):
                 logger.info("User Checked In already")
                 return 404
             else:

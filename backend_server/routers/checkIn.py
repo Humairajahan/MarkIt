@@ -15,7 +15,12 @@ async def checkin(request: Attendance):
     try:
         response = redis_Client.findTodaysCheckINEntry(request.email)
         if response == 404:
-            raise HTTPException(status_code=response, detail="Error with Redis!")
+            return JSONResponse(
+                status_code=response,
+                content={
+                    "detail": "User Checked In already!"
+                }
+            )
         else:
             return JSONResponse(
                 status_code=response,
