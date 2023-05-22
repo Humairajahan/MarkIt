@@ -50,7 +50,7 @@ class RedisClient:
             users[user] = {
                 "date": jsonable_encoder(datetime.now().date()),
                 "checkIN": jsonable_encoder(datetime.now()),
-                "checkOUT": jsonable_encoder(datetime.min),
+                "checkOUT": "None",
             }
             self.pushToRedis(data=users)
             return 201
@@ -75,9 +75,9 @@ class RedisClient:
             logger.info("User exists")
             date = users[user]["date"]
             checkout = users[user]["checkOUT"]
-            if date == datetime.now().date() and checkout == datetime.min:
+            if date == str(datetime.now().date()) and checkout == "None":
                 logger.info("User Check Out yet to be done")
-                users[user]["checkIN"] = datetime.now()
+                users[user]["checkOUT"] = jsonable_encoder(datetime.now())
                 self.pushToRedis(data=users)
                 return 200
             else:
